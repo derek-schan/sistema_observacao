@@ -4,11 +4,16 @@ project(sistema_observacao)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+set(octomap_DIR /opt/ros/indigo/share/octomap)
+
 find_package(catkin REQUIRED COMPONENTS
+  nodelet
   roscpp
-  rospy
   std_msgs
+  octomap
 )
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -100,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES sistema_observacao
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
@@ -114,10 +119,17 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
+  ${nodelet_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
+set(SistemaObservacaoDirInclude include/sistema_observacao)
+set(SistemaObservacaoDirSrc src/lib)
+file(GLOB_RECURSE SistemaObservacaoHeaders "${SistemaObservacaoDirInclude}/*.h" "${SistemaObservacaoDirSrc}/*.h")
+file(GLOB_RECURSE SistemaObservacaoSources "${SistemaObservacaoDirSrc}/*.cpp")
 # add_library(sistema_observacao
 #   src/${PROJECT_NAME}/sistema_observacao.cpp
 # )
@@ -130,6 +142,8 @@ include_directories(
 ## Declare a C++ executable
 # add_executable(sistema_observacao_node src/sistema_observacao_node.cpp)
 
+add_executable(diane_mapper src/diane_mapper_main.cpp ${SistemaObservacaoHeaders} ${SistemaObservacaoSources})
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(sistema_observacao_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -138,6 +152,13 @@ include_directories(
 # target_link_libraries(sistema_observacao_node
 #   ${catkin_LIBRARIES}
 # )
+
+target_link_libraries(diane_mapper
+  ${catkin_LIBRARIES}
+  ${OCTOMAP_LIBRARIES}
+  ${nodelet_LIBRARIES}
+)
+
 
 #############
 ## Install ##
