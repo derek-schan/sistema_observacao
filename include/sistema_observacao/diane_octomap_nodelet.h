@@ -1,13 +1,13 @@
 /*!
- * \file diane_mapper_nodelet.h
+ * \file diane_octomap_nodelet.h
  */
 
 
 
-#ifndef DIANE_DIANE_MAPPER_NODELET_H
-#define DIANE_DIANE_MAPPER_NODELET_H
+#ifndef DIANE_DIANE_OCTOMAP_NODELET_H
+#define DIANE_DIANE_OCTOMAP_NODELET_H
 
-#include <sistema_observacao/diane_mapper.h>
+#include <sistema_observacao/diane_octomap.h>
 #include <ros/ros.h>
 #include <nodelet/nodelet.h>
 #include <string>
@@ -19,15 +19,15 @@
 #include <std_srvs/Empty.h>
 
 
-namespace diane_mapper {
+namespace diane_octomap {
 
 
 
 /*!
- * \class DianeMapperNodelet
- * \brief The DianeMapperNodelet class
+ * \class DianeOctomapNodelet
+ * \brief The DianeOctomapNodelet class
  */
-class DianeMapperNodelet : public DianeMapper
+class DianeOctomapNodelet : public DianeOctomap, public nodelet::Nodelet
 {
      /// ROS node handle.
      ros::NodeHandle nodeHandle;
@@ -49,9 +49,9 @@ class DianeMapperNodelet : public DianeMapper
 //     void Feedback();
 
  public:
-     DianeMapperNodelet();
+     DianeOctomapNodelet();
      void onInit();
-     virtual ~DianeMapperNodelet();
+     virtual ~DianeOctomapNodelet();
 };
 
 

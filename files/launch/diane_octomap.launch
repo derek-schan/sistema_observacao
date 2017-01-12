@@ -1,0 +1,10 @@
+<launch>
+   
+   <arg name="manager" default="diane_octomap_manager"/>
+   <arg name="namespace" default="r"/>
+   
+   <node ns="$(arg namespace)" pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager"/>
+
+   <node ns="$(arg namespace)" pkg="nodelet" type="nodelet" name="diane_octomap" args="load diane_octomap/DianeOctomapNodelet $(arg manager)"/>
+
+</launch>

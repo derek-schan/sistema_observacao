@@ -106,8 +106,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES sistema_observacao
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  LIBRARIES diane_octomap_lib
+  CATKIN_DEPENDS nodelet roscpp std_msgs
 #  DEPENDS system_lib
 )
 
@@ -121,8 +121,8 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${OCTOMAP_INCLUDE_DIRS}
   ${nodelet_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -130,9 +130,8 @@ set(SistemaObservacaoDirInclude include/sistema_observacao)
 set(SistemaObservacaoDirSrc src/lib)
 file(GLOB_RECURSE SistemaObservacaoHeaders "${SistemaObservacaoDirInclude}/*.h" "${SistemaObservacaoDirSrc}/*.h")
 file(GLOB_RECURSE SistemaObservacaoSources "${SistemaObservacaoDirSrc}/*.cpp")
-# add_library(sistema_observacao
-#   src/${PROJECT_NAME}/sistema_observacao.cpp
-# )
+add_library(diane_octomap_lib ${SistemaObservacaoHeaders} ${SistemaObservacaoSources})
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -142,7 +141,7 @@ file(GLOB_RECURSE SistemaObservacaoSources "${SistemaObservacaoDirSrc}/*.cpp")
 ## Declare a C++ executable
 # add_executable(sistema_observacao_node src/sistema_observacao_node.cpp)
 
-add_executable(diane_mapper src/diane_mapper_main.cpp ${SistemaObservacaoHeaders} ${SistemaObservacaoSources})
+add_executable(diane_octomap src/diane_octomap_main.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -153,10 +152,17 @@ add_executable(diane_mapper src/diane_mapper_main.cpp ${SistemaObservacaoHeaders
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(diane_mapper
+target_link_libraries(diane_octomap_lib
   ${catkin_LIBRARIES}
-  ${OCTOMAP_LIBRARIES}
   ${nodelet_LIBRARIES}
+  ${OCTOMAP_LIBRARIES}
+)
+
+
+target_link_libraries(diane_octomap
+  ${catkin_LIBRARIES}
+  ${nodelet_LIBRARIES}
+  ${OCTOMAP_LIBRARIES}
 )
 
 
