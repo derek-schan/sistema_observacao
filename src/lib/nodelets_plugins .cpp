@@ -10,7 +10,6 @@
 //#include <diane_controller/diane_controller_remap.h>
 
 PLUGINLIB_DECLARE_CLASS(diane_octomap_lib, DianeOctomapNodelet, diane_octomap::DianeOctomapNodelet, nodelet::Nodelet)
-PLUGINLIB_DECLARE_CLASS(diane_octomap, DianeOctomapNodelet, diane_octomap::DianeOctomapNodelet, nodelet::Nodelet)
 
 
 //PLUGINLIB_DECLARE_CLASS(diane_controller_lib, DianeControllerNodelet, diane_controller::DianeControllerNodelet, nodelet::Nodelet)
