@@ -1,11 +1,12 @@
 // diane_octomap.cpp
 
+#include <iostream>
 
 #include <sistema_observacao/diane_octomap.h>
-#include <iostream>
 
 using namespace std;
 using namespace octomap;
+using namespace octomap_msgs;
 
 
 diane_octomap::DianeOctomap::DianeOctomap()
@@ -24,11 +25,15 @@ void diane_octomap::DianeOctomap::StartInternalCycle()
 {
     mutStartStop.lock();
 
+    cout << "StartInternalCycle Called.\n\n";
+
     stop = false;
 
     DianeOctomap::teste();
 
     internalThread = new boost::thread(DianeOctomap::InternalThreadFunction, this);
+
+    cout << "StartInternalCycle Ended.\n\n";
 
     mutStartStop.unlock();
 
@@ -39,10 +44,14 @@ void diane_octomap::DianeOctomap::StopInternalCycle()
 {
     mutStartStop.lock();
 
+    cout << "StopInternalCycle Called.\n\n";
+
     stop = true;
     internalThread->join();
     delete internalThread;
     internalThread = NULL;
+
+    cout << "StopInternalCycle Ended.\n\n";
 
     mutStartStop.unlock();
 
@@ -63,37 +72,28 @@ void diane_octomap::DianeOctomap::InternalCycleProcedure()
     }
 }
 
-void diane_octomap::DianeOctomap::teste(){
-      string vrmlFilename = "";
-      string btFilename = "";
-
-      btFilename = "/home/rob/catkin_ws/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect.bt";
-
-
-
-      cout << "\nReading OcTree file\n===========================\n";
-      OcTree* tree = new OcTree(btFilename);
+void diane_octomap::DianeOctomap::teste()
+{
+    string btFilename = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect.bt";
+    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/OcTree/Escada_Kinect.ot";
 
 
 
-      size_t count(0);
-      for(OcTree::leaf_iterator it = tree->begin(), end=tree->end(); it!= end; ++it) {
-        if(tree->isNodeOccupied(*it)){
-          count++;
-          double size = it.getSize();
-          outfile << "Transform { translation "
-              << it.getX() << " " << it.getY() << " " << it.getZ()
-              << " \n  children ["
-              << " Shape { geometry Box { size "
-              << size << " " << size << " " << size << "} } ]\n"
-              << "}\n";
+    cout << "\nReading OcTree file\n===========================\n" << endl;
+    OcTree* tree = new OcTree(btFilename);
+
+
+    size_t count(0);
+    for(OcTree::leaf_iterator it = tree->begin(), end=tree->end(); it!= end; ++it)
+    {
+        if(tree->isNodeOccupied(*it))
+        {
+            count++;
+            double size = it.getSize();
         }
-      }
+    }
 
-      delete tree;
-
-      outfile.close();
-
+    delete tree;
 
 
 }

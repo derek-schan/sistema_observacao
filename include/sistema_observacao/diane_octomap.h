@@ -9,6 +9,7 @@
 
 
 #include <vector>
+
 #include <ros/ros.h>
 
 #include <std_msgs/Empty.h>
@@ -19,6 +20,9 @@
 #include <boost/thread.hpp>
 
 #include <octomap/OcTree.h>
+#include <octomap_msgs/Octomap.h>
+#include <octomap_msgs/conversions.h>
+
 
 using std::vector;
 

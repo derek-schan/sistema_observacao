@@ -12,8 +12,6 @@ diane_octomap::DianeOctomapNodelet::DianeOctomapNodelet()
 
 void diane_octomap::DianeOctomapNodelet::onInit()
 {
-    DianeOctomap::onInit();
-
     nodeHandle = getNodeHandle();
 
     StartInternalCycle();
