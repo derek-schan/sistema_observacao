@@ -78,7 +78,7 @@ public:
      *      stops the controller.
      */
     void StopInternalCycle();
-
+    void teste();
 
     virtual ~DianeOctomap();
 };
