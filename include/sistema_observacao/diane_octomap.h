@@ -68,6 +68,7 @@ protected:
     OcTree* octree;
     OcTree* octreeFromMsg;
 
+    vector<OcTree::leaf_bbx_iterator> OccupiedLeafsInBBX;
 
 public:
     DianeOctomap();
@@ -90,14 +91,16 @@ public:
     void StopInternalCycle();
 
 
-    void teste();
-
-
+    //Método para obtencão da octree à partir de um arquivo
     void GenerateOcTreeFromFile();
 
 
-    //Método utilizado para a reconhecer uma escada dado uma OcTree;
-    void StairDetection(OcTree* octree);
+    //Métodos utilizados para a identificar uma escada dada uma OcTree;
+    void GetOccupiedLeafsOfBBX(OcTree* octree);
+
+
+    //A identificacão da escada será sobre o vetor de folhas contidas dentro do Bounding Box
+    void StairDetection();
 
 
     virtual ~DianeOctomap();

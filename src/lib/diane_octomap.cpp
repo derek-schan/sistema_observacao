@@ -27,7 +27,14 @@ void diane_octomap::DianeOctomap::StartInternalCycle()
 
     stop = false;
 
+    //Obtendo a octree à partir do arquivo (o caminho para o arquivo ainda está definido chapado no código - mudar para um arquivo de configuracão).
     DianeOctomap::GenerateOcTreeFromFile();
+
+    //Filtrando e armazenando as folhas da octree que estejam dentro da Bounding Box definida no método e que estejam ocupadas.
+    DianeOctomap::GetOccupiedLeafsOfBBX(octree);
+
+    //Utilizando as folhas filtradas (presentes no vetor) para detectar as informacões da escada.
+    DianeOctomap::StairDetection();
 
     internalThread = new boost::thread(DianeOctomap::InternalThreadFunction, this);
 
@@ -62,30 +69,6 @@ void diane_octomap::DianeOctomap::InternalCycleProcedure()
     {
 
     }
-}
-
-
-void diane_octomap::DianeOctomap::teste()
-{
-    string btFilename = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect_5.bt";
-
-
-    cout << "\nReading OcTree file\n===========================\n" << endl;
-    OcTree* tree = new OcTree(btFilename);
-
-
-    size_t count(0);
-    for(OcTree::leaf_iterator it = tree->begin(), end=tree->end(); it!= end; ++it)
-    {
-        if(tree->isNodeOccupied(*it))
-        {
-            count++;
-        }
-    }
-
-    delete tree;
-
-
 }
 
 
@@ -136,9 +119,57 @@ void diane_octomap::DianeOctomap::GenerateOcTreeFromFile()
 }
 
 
-void diane_octomap::DianeOctomap::StairDetection(OcTree* octree)
+void diane_octomap::DianeOctomap::GetOccupiedLeafsOfBBX(OcTree* octree)
 {
+    point3d min;
+    min.x() = -0.70;
+    min.y() = 0;
+    min.z() = 0;
 
+    point3d max;
+    max.x() = 0.65;
+    max.y() = 100;
+    max.z() = 100;
+
+    //Armazenando somente as folhas pertencentes à Bounding Box e que estejam ocupadas.
+    for(OcTree::leaf_bbx_iterator bbx_it = octree->begin_leafs_bbx(min, max), end=octree->end_leafs_bbx(); bbx_it!= end; ++bbx_it)
+    {
+        if(octree->isNodeOccupied(*bbx_it))
+        {
+            OccupiedLeafsInBBX.push_back(bbx_it);
+        }
+    }
+
+    cout << "Folhas ocupadas: " << OccupiedLeafsInBBX.size() << endl << endl;
+
+}
+
+
+void diane_octomap::DianeOctomap::StairDetection()
+{
+    //Tentando acessar os dados das folhas
+    for(int i = 0; i < OccupiedLeafsInBBX.size(); i++)
+    {
+        OcTree::leaf_bbx_iterator leaf_it = OccupiedLeafsInBBX.at(i);
+
+        string Result = "Folha ";
+        ostringstream convert_i;
+        ostringstream convert_x;
+        ostringstream convert_y;
+        ostringstream convert_z;
+
+        convert_i << i + 1;
+        Result = convert_i.str() + ": x = ";
+        convert_x << leaf_it.getX();
+        Result = Result + convert_x.str() + "; y = ";
+        convert_y << leaf_it.getY();
+        Result = Result + convert_y.str() + "; z = ";
+        convert_z << leaf_it.getZ();
+        Result = Result + convert_z.str();
+
+        cout << Result << endl;
+
+    }
 
 }
 
