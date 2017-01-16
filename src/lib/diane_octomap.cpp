@@ -67,9 +67,7 @@ void diane_octomap::DianeOctomap::InternalCycleProcedure()
 
 void diane_octomap::DianeOctomap::teste()
 {
-    string btFilename = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect.bt";
-    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/Octree/Escada_Kinect.ot";
-
+    string btFilename = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect_5.bt";
 
 
     cout << "\nReading OcTree file\n===========================\n" << endl;
@@ -93,7 +91,7 @@ void diane_octomap::DianeOctomap::teste()
 
 void diane_octomap::DianeOctomap::GenerateOcTreeFromFile()
 {
-    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/Octree/Escada_Kinect.ot";
+    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/Octree/Escada_Kinect_5.ot";
 
     AbstractOcTree* abs_tree = AbstractOcTree::read(otFileName);
     if(abs_tree) // read error returns NULL
