@@ -21,10 +21,12 @@
 
 #include <octomap/OcTree.h>
 #include <octomap_msgs/Octomap.h>
-#include <octomap_msgs/conversions.h>
 
 
 using std::vector;
+
+using namespace octomap;
+using namespace std;
 
 namespace diane_octomap {
 
@@ -62,6 +64,10 @@ protected:
     /// Mutex used to control the internal cycle thread.
     boost::mutex mutStartStop;
 
+    //OcTree referente ao mapa estático, criada à partir do arquivo .ot inicial.
+    OcTree* octree;
+    OcTree* octreeFromMsg;
+
 
 public:
     DianeOctomap();
@@ -82,7 +88,17 @@ public:
      *      stops the controller.
      */
     void StopInternalCycle();
+
+
     void teste();
+
+
+    void GenerateOcTreeFromFile();
+
+
+    //Método utilizado para a reconhecer uma escada dado uma OcTree;
+    void StairDetection(OcTree* octree);
+
 
     virtual ~DianeOctomap();
 };

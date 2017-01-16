@@ -6,7 +6,7 @@
 
 using namespace std;
 using namespace octomap;
-using namespace octomap_msgs;
+using octomap_msgs::Octomap;
 
 
 diane_octomap::DianeOctomap::DianeOctomap()
@@ -25,15 +25,11 @@ void diane_octomap::DianeOctomap::StartInternalCycle()
 {
     mutStartStop.lock();
 
-    cout << "StartInternalCycle Called.\n\n";
-
     stop = false;
 
-    DianeOctomap::teste();
+    DianeOctomap::GenerateOcTreeFromFile();
 
     internalThread = new boost::thread(DianeOctomap::InternalThreadFunction, this);
-
-    cout << "StartInternalCycle Ended.\n\n";
 
     mutStartStop.unlock();
 
@@ -44,14 +40,10 @@ void diane_octomap::DianeOctomap::StopInternalCycle()
 {
     mutStartStop.lock();
 
-    cout << "StopInternalCycle Called.\n\n";
-
     stop = true;
     internalThread->join();
     delete internalThread;
     internalThread = NULL;
-
-    cout << "StopInternalCycle Ended.\n\n";
 
     mutStartStop.unlock();
 
@@ -72,10 +64,11 @@ void diane_octomap::DianeOctomap::InternalCycleProcedure()
     }
 }
 
+
 void diane_octomap::DianeOctomap::teste()
 {
     string btFilename = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/BonsaiTree/Escada_Kinect.bt";
-    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/OcTree/Escada_Kinect.ot";
+    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/Octree/Escada_Kinect.ot";
 
 
 
@@ -89,7 +82,6 @@ void diane_octomap::DianeOctomap::teste()
         if(tree->isNodeOccupied(*it))
         {
             count++;
-            double size = it.getSize();
         }
     }
 
@@ -97,6 +89,61 @@ void diane_octomap::DianeOctomap::teste()
 
 
 }
+
+
+void diane_octomap::DianeOctomap::GenerateOcTreeFromFile()
+{
+    string otFileName = "/home/derekchan/catkin_workspace/src/sistema_observacao/files/MapFiles/Octree/Escada_Kinect.ot";
+
+    AbstractOcTree* abs_tree = AbstractOcTree::read(otFileName);
+    if(abs_tree) // read error returns NULL
+    {
+        octree = dynamic_cast<OcTree*>(abs_tree);
+
+        if (octree) // cast succeeds if correct type
+        {
+            size_t occupied_count(0);
+
+            size_t free_count(0);
+
+            size_t total_count(0);
+
+            double size;
+
+            for(OcTree::leaf_iterator it = octree->begin(), end=octree->end(); it!= end; ++it)
+            {
+                if(octree->isNodeOccupied(*it))
+                {
+                    occupied_count++;
+                }
+                else
+                {
+                    free_count++;
+                }
+
+                total_count++;
+
+                size = it.getSize();
+            }
+
+            cout << "\nWriting OcTree Information\n===========================\n\n" << endl;
+
+            cout << "Número de nós ocupados: " << occupied_count << ".\n" << endl;
+            cout << "Número de nós livres: " << free_count << ".\n" << endl;
+            cout << "Número de nós totais: " << total_count << ".\n" << endl;
+
+        }
+    }
+
+}
+
+
+void diane_octomap::DianeOctomap::StairDetection(OcTree* octree)
+{
+
+
+}
+
 
 diane_octomap::DianeOctomap::~DianeOctomap()
 {
